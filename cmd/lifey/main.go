@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"github.com/ecshreve/lifey/internal/grid"
+)
 
 func main() {
-	fmt.Println("hello world")
+	g := grid.NewGrid(5)
+	g.Cells[0][0].Alive = true
+	g.PrintGrid()
 }
