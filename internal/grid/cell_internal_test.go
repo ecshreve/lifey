@@ -152,3 +152,51 @@ func TestGetNeighborIndices(t *testing.T) {
 		})
 	}
 }
+
+func TestGetNumAlive(t *testing.T) {
+	testcases := []struct {
+		desc     string
+		cells    []*Cell
+		expected int
+	}{
+		{
+			desc:     "empty slice returns zero",
+			cells:    []*Cell{},
+			expected: 0,
+		},
+		{
+			desc: "slice with none alive returns zero",
+			cells: []*Cell{
+				&Cell{Current: Dead},
+				&Cell{Current: Dead},
+				&Cell{Current: Dead},
+			},
+			expected: 0,
+		},
+		{
+			desc: "slice with one alive returns one",
+			cells: []*Cell{
+				&Cell{Current: Dead},
+				&Cell{Current: Alive},
+				&Cell{Current: Dead},
+			},
+			expected: 1,
+		},
+		{
+			desc: "slice with multiple alive returns expected number",
+			cells: []*Cell{
+				&Cell{Current: Alive},
+				&Cell{Current: Alive},
+				&Cell{Current: Dead},
+			},
+			expected: 2,
+		},
+	}
+
+	for _, testcase := range testcases {
+		t.Run(testcase.desc, func(t *testing.T) {
+			actual := getNumAlive(testcase.cells)
+			assert.Equal(t, testcase.expected, actual)
+		})
+	}
+}
