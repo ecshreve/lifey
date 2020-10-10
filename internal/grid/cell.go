@@ -1,5 +1,9 @@
 package grid
 
+import (
+	"fmt"
+)
+
 // CellState represents the state of a Cell.
 type CellState int
 
@@ -21,6 +25,10 @@ type Cell struct {
 	Row       int
 	Col       int
 	Neighbors []*Cell
+}
+
+func (c Cell) String() string {
+	return fmt.Sprintf("r: %d, c: %d -- curr: %v -- next: %v", c.Row, c.Col, c.Current, c.Next)
 }
 
 // getNeighborIndices returns a 2d slice of ints where each element is of the

@@ -127,3 +127,12 @@ func (g *Grid) PrintGrid() {
 	}
 	fmt.Print(ret)
 }
+
+// PrintDebugInfo prints details about the current state of the Grid.
+func (g *Grid) PrintDebugInfo() {
+	for _, row := range g.Cells {
+		for _, cell := range row {
+			fmt.Println(cell)
+		}
+	}
+}
