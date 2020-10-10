@@ -1,6 +1,10 @@
 package grid
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+	"math/rand"
+)
 
 // Grid holds the data for the simulation.
 type Grid struct {
@@ -38,7 +42,32 @@ func NewGrid(size int) *Grid {
 	}
 	g := &Grid{Size: size, Cells: cells}
 	g.populateNeighbors()
+	g.seedGrid(float64(0.75))
 	return g
+}
+
+// seedGrid sets a percentage of the Grid's Cells to the Alive state based on
+// the perc passed in.
+func (g *Grid) seedGrid(perc float64) {
+	initialAlive := int(math.Floor(float64(g.Size*g.Size) * perc))
+
+	// TODO: change this seed value to be based on current time so it's really
+	// random, leaving as a hard-coded value to make testing easier.
+	rand.Seed(3)
+	for initialAlive > 0 {
+		// Pick a random row and column value.
+		r := rand.Intn(g.Size)
+		c := rand.Intn(g.Size)
+
+		// If the Cell at that row and column is already Alive then skip to the
+		// next iteration and pick a new row and column.
+		if g.Cells[r][c].Current == Alive {
+			continue
+		}
+
+		g.Cells[r][c].Current = Alive
+		initialAlive--
+	}
 }
 
 // setNextState sets the NextState field for all Cells in the Grid.
