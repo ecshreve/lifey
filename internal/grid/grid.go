@@ -4,9 +4,10 @@ import "fmt"
 
 // Cell represents an individual cell in the simulation.
 type Cell struct {
-	Alive bool
-	Row   int
-	Col   int
+	Alive     bool
+	Row       int
+	Col       int
+	Neighbors []*Cell
 }
 
 // cellStr returns the string representation of the given Cell. " A " if the
@@ -24,10 +25,52 @@ func (c *Cell) cellStr() string {
 	return ret
 }
 
+// getNeighborIndices returns a 2d slice of ints where each element is of the
+// form []int{row, col}. These represent grid locations that are valid neighbors
+// of the given Cell.
+func (c *Cell) getNeighborIndices(size int) [][]int {
+	possibles := [][]int{
+		[]int{c.Row - 1, c.Col - 1},
+		[]int{c.Row - 1, c.Col},
+		[]int{c.Row - 1, c.Col + 1},
+
+		[]int{c.Row, c.Col - 1},
+		[]int{c.Row, c.Col + 1},
+
+		[]int{c.Row + 1, c.Col - 1},
+		[]int{c.Row + 1, c.Col},
+		[]int{c.Row + 1, c.Col + 1},
+	}
+
+	var filtered [][]int
+	for _, possible := range possibles {
+		if possible[0] < 0 || possible[1] < 0 {
+			continue
+		}
+		if possible[0] >= size || possible[1] >= size {
+			continue
+		}
+		filtered = append(filtered, possible)
+	}
+	return filtered
+}
+
 // Grid holds the data for the simulation.
 type Grid struct {
 	Size  int
 	Cells [][]*Cell
+}
+
+// populateNeighbors sets the Cell.Neighbors value for each Cell in the Grid.
+func (g *Grid) populateNeighbors() {
+	for _, row := range g.Cells {
+		for _, cell := range row {
+			neighborIndices := cell.getNeighborIndices(g.Size)
+			for _, neighborIndex := range neighborIndices {
+				cell.Neighbors = append(cell.Neighbors, g.Cells[neighborIndex[0]][neighborIndex[1]])
+			}
+		}
+	}
 }
 
 // NewGrid returns a newly initialized Grid of Cells of the given size.
@@ -37,14 +80,17 @@ func NewGrid(size int) *Grid {
 		row := make([]*Cell, size)
 		for c := 0; c < size; c++ {
 			row[c] = &Cell{
-				Alive: false,
-				Row:   r,
-				Col:   c,
+				Alive:     false,
+				Row:       r,
+				Col:       c,
+				Neighbors: []*Cell{},
 			}
 		}
 		cells[r] = row
 	}
-	return &Grid{Size: size, Cells: cells}
+	g := &Grid{Size: size, Cells: cells}
+	g.populateNeighbors()
+	return g
 }
 
 // getDivider returns the divider string based on the Grid's size.
