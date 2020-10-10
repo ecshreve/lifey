@@ -31,9 +31,7 @@ func NewGrid(size int) *Grid {
 		row := make([]*Cell, size)
 		for c := 0; c < size; c++ {
 			row[c] = &Cell{
-				Prev:      Unknown,
 				Current:   Dead,
-				Next:      Unknown,
 				Row:       r,
 				Col:       c,
 				Neighbors: []*Cell{},

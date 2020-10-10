@@ -9,13 +9,13 @@ type CellState int
 
 // Enum defining the possible CellStates.
 const (
-	Dead CellState = iota
+	Unknown CellState = iota
 	Alive
-	Unknown
+	Dead
 )
 
 func (cs CellState) String() string {
-	return [...]string{" ", "A", "u"}[cs]
+	return [...]string{"u", "A", "."}[cs]
 }
 
 // Cell represents an individual cell in the simulation.
