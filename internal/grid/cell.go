@@ -1,27 +1,26 @@
 package grid
 
+// CellState represents the state of a Cell.
+type CellState int
+
+// Enum defining the possible CellStates.
+const (
+	Dead CellState = iota
+	Alive
+	Unknown
+)
+
+func (cs CellState) String() string {
+	return [...]string{" ", "A", "u"}[cs]
+}
+
 // Cell represents an individual cell in the simulation.
 type Cell struct {
-	Alive     bool
-	NextState bool
+	Current   CellState
+	Next      CellState
 	Row       int
 	Col       int
 	Neighbors []*Cell
-}
-
-// cellStr returns the string representation of the given Cell. " A " if the
-// Cell is Alive, or "   " if it isn't.
-func (c *Cell) cellStr() string {
-	ret := " "
-
-	if c.Alive {
-		ret += "A"
-	} else {
-		ret += " "
-	}
-
-	ret += " "
-	return ret
 }
 
 // getNeighborIndices returns a 2d slice of ints where each element is of the
@@ -58,14 +57,14 @@ func (c *Cell) getNeighborIndices(size int) [][]int {
 func getNumAlive(cells []*Cell) int {
 	numAlive := 0
 	for _, c := range cells {
-		if c.Alive {
+		if c.Current == Alive {
 			numAlive++
 		}
 	}
 	return numAlive
 }
 
-// setNextState sets the NextState field for the given Cell based on the
+// setNextState sets the Next field for the given Cell based on the
 // following rules:
 //
 // 1. Any live cell with two or three live neighbours survives.
@@ -75,23 +74,23 @@ func getNumAlive(cells []*Cell) int {
 func (c *Cell) setNextState() {
 	numAlive := getNumAlive(c.Neighbors)
 
-	nextState := false
-	if c.Alive {
+	nextState := Dead
+	if c.Current == Alive {
 		if numAlive == 2 || numAlive == 3 {
-			nextState = true
+			nextState = Alive
 		}
 	} else {
 		if numAlive == 3 {
-			nextState = true
+			nextState = Alive
 		}
 	}
 
-	c.NextState = nextState
+	c.Next = nextState
 }
 
-// update sets the given Cell's Alive field to the value of NextState and resets
-// NextState to false.
+// update sets the given Cell's Current field to the value of Next and sets
+// Next to Unknown.
 func (c *Cell) update() {
-	c.Alive = c.NextState
-	c.NextState = false
+	c.Current = c.Next
+	c.Next = Unknown
 }

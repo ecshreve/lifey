@@ -27,7 +27,8 @@ func NewGrid(size int) *Grid {
 		row := make([]*Cell, size)
 		for c := 0; c < size; c++ {
 			row[c] = &Cell{
-				Alive:     false,
+				Current:   Dead,
+				Next:      Unknown,
 				Row:       r,
 				Col:       c,
 				Neighbors: []*Cell{},
@@ -89,8 +90,7 @@ func (g *Grid) PrintGrid() {
 	for _, row := range g.Cells {
 		rowStr := "|"
 		for _, cell := range row {
-			rowStr += cell.cellStr()
-			rowStr += "|"
+			rowStr += fmt.Sprintf(" %v |", cell.Current)
 		}
 		rowStr += "\n"
 		ret += rowStr
