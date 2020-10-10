@@ -5,6 +5,7 @@ import "fmt"
 // Cell represents an individual cell in the simulation.
 type Cell struct {
 	Alive     bool
+	NextState bool
 	Row       int
 	Col       int
 	Neighbors []*Cell
@@ -55,6 +56,39 @@ func (c *Cell) getNeighborIndices(size int) [][]int {
 	return filtered
 }
 
+// getNumAlive returns the number of Alive Cells in the given slice.
+func getNumAlive(cells []*Cell) int {
+	numAlive := 0
+	for _, c := range cells {
+		if c.Alive {
+			numAlive++
+		}
+	}
+	return numAlive
+}
+
+func (c *Cell) setNextState() {
+	numAlive := getNumAlive(c.Neighbors)
+
+	nextState := false
+	if c.Alive {
+		if numAlive == 2 || numAlive == 3 {
+			nextState = true
+		}
+	} else {
+		if numAlive == 3 {
+			nextState = true
+		}
+	}
+
+	c.NextState = nextState
+}
+
+func (c *Cell) updateState() {
+	c.Alive = c.NextState
+	c.NextState = false
+}
+
 // Grid holds the data for the simulation.
 type Grid struct {
 	Size  int
@@ -91,6 +125,28 @@ func NewGrid(size int) *Grid {
 	g := &Grid{Size: size, Cells: cells}
 	g.populateNeighbors()
 	return g
+}
+
+func (g *Grid) setNextState() {
+	for _, row := range g.Cells {
+		for _, cell := range row {
+			cell.setNextState()
+		}
+	}
+}
+
+func (g *Grid) update() {
+	g.setNextState()
+	for _, row := range g.Cells {
+		for _, cell := range row {
+			cell.updateState()
+		}
+	}
+}
+
+func (g *Grid) Tick() {
+	g.update()
+	g.PrintGrid()
 }
 
 // getDivider returns the divider string based on the Grid's size.
