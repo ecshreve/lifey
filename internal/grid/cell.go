@@ -20,6 +20,7 @@ func (cs CellState) String() string {
 
 // Cell represents an individual cell in the simulation.
 type Cell struct {
+	Prev      CellState
 	Current   CellState
 	Next      CellState
 	Row       int
@@ -28,7 +29,7 @@ type Cell struct {
 }
 
 func (c Cell) String() string {
-	return fmt.Sprintf("r: %d, c: %d -- curr: %v -- next: %v", c.Row, c.Col, c.Current, c.Next)
+	return fmt.Sprintf("r: %d, c: %d -- prev: %v -- curr: %v -- next: %v", c.Row, c.Col, c.Prev, c.Current, c.Next)
 }
 
 // getNeighborIndices returns a 2d slice of ints where each element is of the
@@ -99,6 +100,7 @@ func (c *Cell) setNextState() {
 // update sets the given Cell's Current field to the value of Next and sets
 // Next to Unknown.
 func (c *Cell) update() {
+	c.Prev = c.Current
 	c.Current = c.Next
 	c.Next = Unknown
 }
