@@ -12,7 +12,7 @@ import (
 
 var (
 	app        *tview.Application
-	headerFlex *tview.Flex
+	infoFlex   *tview.Flex
 	simFlex    *tview.Flex
 	tickButton *tview.Button
 )
@@ -48,17 +48,17 @@ func StartSim() {
 	g := grid.NewGrid(100)
 	app = tview.NewApplication()
 
-	headerFlex = tview.NewFlex().SetDirection(tview.FlexColumn)
+	infoFlex = tview.NewFlex().SetDirection(tview.FlexColumn)
 	simFlex = tview.NewFlex().SetDirection(tview.FlexRow)
 
-	headerFlex.SetBorder(true).SetTitle(" info ").SetBorderPadding(1, 1, 1, 1)
+	infoFlex.SetBorder(true).SetTitle(" info ").SetBorderPadding(1, 1, 1, 1)
 	simFlex.SetBorder(true).SetTitle(" sim ").SetBorderPadding(1, 1, 1, 1)
 
 	instructions := "press `q` to exit\n\npress `enter` to trigger the simulation's Tick() function"
 	instructionsText := tview.NewTextView().SetText(instructions)
 	instructionsText.SetBorderPadding(2, 1, 2, 1)
 	instructionsText.SetWrap(true).SetWordWrap(true)
-	headerFlex.AddItem(instructionsText, 0, 1, false)
+	infoFlex.AddItem(instructionsText, 0, 1, false)
 
 	tickButton = tview.NewButton("tick")
 	tickButton.SetBackgroundColorActivated(tcell.ColorSalmon)
@@ -68,11 +68,11 @@ func StartSim() {
 		app.SetFocus(simFlex)
 		hasUpdate <- true
 	})
-	headerFlex.AddItem(tickButton, 0, 1, false)
+	infoFlex.AddItem(tickButton, 0, 1, false)
 
 	flex := tview.NewFlex().
 		AddItem(tview.NewFlex().SetDirection(tview.FlexRow).
-			AddItem(headerFlex, 0, 1, false).
+			AddItem(infoFlex, 0, 1, false).
 			AddItem(simFlex, 0, 2, false), 0, 5, false)
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
