@@ -14,7 +14,6 @@ var (
 	app        *tview.Application
 	headerFlex *tview.Flex
 	simFlex    *tview.Flex
-	endButton  *tview.Button
 	tickButton *tview.Button
 )
 
@@ -46,14 +45,20 @@ func update(g *grid.Grid) {
 }
 
 func StartSim() {
-	g := grid.NewGrid(10)
+	g := grid.NewGrid(100)
 	app = tview.NewApplication()
 
 	headerFlex = tview.NewFlex().SetDirection(tview.FlexColumn)
 	simFlex = tview.NewFlex().SetDirection(tview.FlexRow)
 
-	headerFlex.SetBorder(true).SetTitle(" header ").SetBorderPadding(1, 1, 1, 1)
+	headerFlex.SetBorder(true).SetTitle(" info ").SetBorderPadding(1, 1, 1, 1)
 	simFlex.SetBorder(true).SetTitle(" sim ").SetBorderPadding(1, 1, 1, 1)
+
+	instructions := "press `q` to exit\n\npress `enter` to trigger the simulation's Tick() function"
+	instructionsText := tview.NewTextView().SetText(instructions)
+	instructionsText.SetBorderPadding(2, 1, 2, 1)
+	instructionsText.SetWrap(true).SetWordWrap(true)
+	headerFlex.AddItem(instructionsText, 0, 1, false)
 
 	tickButton = tview.NewButton("tick")
 	tickButton.SetBackgroundColorActivated(tcell.ColorSalmon)
@@ -80,7 +85,9 @@ func StartSim() {
 		}
 		return event
 	})
+
 	go update(g)
+
 	if err := app.SetRoot(flex, true).SetFocus(tickButton).Run(); err != nil {
 		panic(err)
 	}
