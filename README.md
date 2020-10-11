@@ -16,3 +16,7 @@ git clone https://github.com/ecshreve/lifey.git
 cd lifey
 make run
 ```
+
+## Demo
+
+![lifey tui](static/lifesim.gif "lifey")
