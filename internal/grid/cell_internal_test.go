@@ -200,3 +200,149 @@ func TestGetNumAlive(t *testing.T) {
 		})
 	}
 }
+
+func TestSetNextState(t *testing.T) {
+	testcases := []struct {
+		desc     string
+		cell     *Cell
+		expected CellState
+	}{
+		{
+			desc: "live cell with 0 live neighbor dies",
+			cell: &Cell{
+				Current: Alive,
+				Neighbors: []*Cell{
+					&Cell{Current: Dead},
+					&Cell{Current: Dead},
+					&Cell{Current: Dead},
+					&Cell{Current: Dead},
+				},
+			},
+			expected: Dead,
+		},
+		{
+			desc: "live cell with 1 live neighbor dies",
+			cell: &Cell{
+				Current: Alive,
+				Neighbors: []*Cell{
+					&Cell{Current: Alive},
+					&Cell{Current: Dead},
+					&Cell{Current: Dead},
+					&Cell{Current: Dead},
+				},
+			},
+			expected: Dead,
+		},
+		{
+			desc: "live cell with 2 live neighbors lives",
+			cell: &Cell{
+				Current: Alive,
+				Neighbors: []*Cell{
+					&Cell{Current: Alive},
+					&Cell{Current: Alive},
+					&Cell{Current: Dead},
+					&Cell{Current: Dead},
+				},
+			},
+			expected: Alive,
+		},
+		{
+			desc: "live cell with 3 live neighbors lives",
+			cell: &Cell{
+				Current: Alive,
+				Neighbors: []*Cell{
+					&Cell{Current: Alive},
+					&Cell{Current: Alive},
+					&Cell{Current: Alive},
+					&Cell{Current: Dead},
+				},
+			},
+			expected: Alive,
+		},
+		{
+			desc: "live cell with 4 live neighbors dies",
+			cell: &Cell{
+				Current: Alive,
+				Neighbors: []*Cell{
+					&Cell{Current: Alive},
+					&Cell{Current: Alive},
+					&Cell{Current: Alive},
+					&Cell{Current: Alive},
+				},
+			},
+			expected: Dead,
+		},
+		{
+			desc: "dead cell with 0 live neighbor stays dead",
+			cell: &Cell{
+				Current: Dead,
+				Neighbors: []*Cell{
+					&Cell{Current: Dead},
+					&Cell{Current: Dead},
+					&Cell{Current: Dead},
+					&Cell{Current: Dead},
+				},
+			},
+			expected: Dead,
+		},
+		{
+			desc: "dead cell with 1 live neighbor stays dead",
+			cell: &Cell{
+				Current: Dead,
+				Neighbors: []*Cell{
+					&Cell{Current: Alive},
+					&Cell{Current: Dead},
+					&Cell{Current: Dead},
+					&Cell{Current: Dead},
+				},
+			},
+			expected: Dead,
+		},
+		{
+			desc: "dead cell with 2 live neighbors stays dead",
+			cell: &Cell{
+				Current: Dead,
+				Neighbors: []*Cell{
+					&Cell{Current: Alive},
+					&Cell{Current: Alive},
+					&Cell{Current: Dead},
+					&Cell{Current: Dead},
+				},
+			},
+			expected: Dead,
+		},
+		{
+			desc: "dead cell with 3 live neighbors lives",
+			cell: &Cell{
+				Current: Dead,
+				Neighbors: []*Cell{
+					&Cell{Current: Alive},
+					&Cell{Current: Alive},
+					&Cell{Current: Alive},
+					&Cell{Current: Dead},
+				},
+			},
+			expected: Alive,
+		},
+		{
+			desc: "dead cell with 4 live neighbors stays dead",
+			cell: &Cell{
+				Current: Dead,
+				Neighbors: []*Cell{
+					&Cell{Current: Alive},
+					&Cell{Current: Alive},
+					&Cell{Current: Alive},
+					&Cell{Current: Alive},
+				},
+			},
+			expected: Dead,
+		},
+	}
+
+	for _, testcase := range testcases {
+		t.Run(testcase.desc, func(t *testing.T) {
+			testcase.cell.setNextState()
+			assert.Equal(t, testcase.expected, testcase.cell.Next)
+		})
+	}
+}
