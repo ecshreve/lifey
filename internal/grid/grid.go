@@ -99,19 +99,19 @@ func (g *Grid) getDivider() string {
 	return ret
 }
 
-// PrintGrid prints a friendly representation of the Grid, where a Cell marked
-// `A` represents an "Alive" Cell.
+// GetGridString returns a friendly representation of the Grid, where a Cell
+// marked `A` represents an "Alive" Cell, and one marked "." is Dead.
 //
 // For example a 3x3 Grid could look like this:
 //
 // +---+---+---+
-// |   |   |   |
+// | . | A | . |
 // +---+---+---+
-// | A |   |   |
+// | A | . | . |
 // +---+---+---+
-// |   | A |   |
+// | . | A | . |
 // +---+---+---+
-func (g *Grid) PrintGrid() {
+func (g *Grid) GetGridString() string {
 	divider := g.getDivider()
 	ret := ""
 	ret += divider
@@ -124,7 +124,7 @@ func (g *Grid) PrintGrid() {
 		ret += rowStr
 		ret += divider
 	}
-	fmt.Print(ret)
+	return ret
 }
 
 // PrintDebugInfo prints details about the current state of the Grid.
