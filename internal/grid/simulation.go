@@ -1,7 +1,5 @@
 package grid
 
-import "fmt"
-
 // setNextState sets the Next field for all Cells in the Grid.
 func (g *Grid) setNextState() {
 	for _, row := range g.Cells {
@@ -25,5 +23,4 @@ func (g *Grid) update() {
 // Tick updates the Grid and prints the updated Grid.
 func (g *Grid) Tick() {
 	g.update()
-	fmt.Println(g.GetGridString())
 }
