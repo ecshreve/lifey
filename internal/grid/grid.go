@@ -12,18 +12,6 @@ type Grid struct {
 	Cells [][]*Cell
 }
 
-// populateNeighbors sets the Cell.Neighbors value for each Cell in the Grid.
-func (g *Grid) populateNeighbors() {
-	for _, row := range g.Cells {
-		for _, cell := range row {
-			neighborIndices := cell.getNeighborIndices(g.Size)
-			for _, neighborIndex := range neighborIndices {
-				cell.Neighbors = append(cell.Neighbors, g.Cells[neighborIndex[0]][neighborIndex[1]])
-			}
-		}
-	}
-}
-
 // NewGrid returns a newly initialized Grid of Cells of the given size.
 func NewGrid(size int) *Grid {
 	cells := make([][]*Cell, size)
@@ -43,6 +31,18 @@ func NewGrid(size int) *Grid {
 	g.populateNeighbors()
 	g.seedGrid(float64(0.75))
 	return g
+}
+
+// populateNeighbors sets the Cell.Neighbors value for each Cell in the Grid.
+func (g *Grid) populateNeighbors() {
+	for _, row := range g.Cells {
+		for _, cell := range row {
+			neighborIndices := cell.getNeighborIndices(g.Size)
+			for _, neighborIndex := range neighborIndices {
+				cell.Neighbors = append(cell.Neighbors, g.Cells[neighborIndex[0]][neighborIndex[1]])
+			}
+		}
+	}
 }
 
 // seedGrid sets a percentage of the Grid's Cells to the Alive state based on
@@ -66,26 +66,6 @@ func (g *Grid) seedGrid(perc float64) {
 
 		g.Cells[r][c].Current = Alive
 		initialAlive--
-	}
-}
-
-// setNextState sets the NextState field for all Cells in the Grid.
-func (g *Grid) setNextState() {
-	for _, row := range g.Cells {
-		for _, cell := range row {
-			cell.setNextState()
-		}
-	}
-}
-
-// update sets the NextState field for all Cells in the Grid, and then calls the
-// Cell.update() for each Cell in the Grid.
-func (g *Grid) update() {
-	g.setNextState()
-	for _, row := range g.Cells {
-		for _, cell := range row {
-			cell.update()
-		}
 	}
 }
 
