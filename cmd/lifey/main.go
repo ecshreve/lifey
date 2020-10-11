@@ -6,7 +6,6 @@ import (
 
 func main() {
 	g := grid.NewGrid(3)
-	g.PrintGrid()
 	g.PrintDebugInfo()
 
 	g.Tick()
