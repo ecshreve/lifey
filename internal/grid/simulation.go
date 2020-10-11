@@ -18,6 +18,13 @@ func (g *Grid) update() {
 			cell.update()
 		}
 	}
+
+	g.PrevAlive = g.CurrentAlive
+	g.PrevDead = g.CurrentDead
+
+	g.CurrentAlive = g.GetNumAlive()
+	g.CurrentDead = g.Size*g.Size - g.CurrentAlive
+	g.CurrentTick++
 }
 
 // Tick updates the Grid and prints the updated Grid.
