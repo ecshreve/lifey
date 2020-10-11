@@ -8,8 +8,15 @@ import (
 
 // Grid holds the data for the simulation.
 type Grid struct {
-	Size  int
-	Cells [][]*Cell
+	Size         int
+	Cells        [][]*Cell
+	InitialAlive int
+	InitialDead  int
+	PrevAlive    int
+	PrevDead     int
+	CurrentAlive int
+	CurrentDead  int
+	CurrentTick  int
 }
 
 // NewGrid returns a newly initialized Grid of Cells of the given size.
@@ -49,6 +56,10 @@ func (g *Grid) populateNeighbors() {
 // the perc passed in.
 func (g *Grid) seedGrid(perc float64) {
 	initialAlive := int(math.Floor(float64(g.Size*g.Size) * perc))
+	g.InitialAlive = initialAlive
+	g.InitialDead = g.Size*g.Size - initialAlive
+	g.CurrentAlive = g.InitialAlive
+	g.CurrentDead = g.InitialDead
 
 	// TODO: change this seed value to be based on current time so it's really
 	// random, leaving as a hard-coded value to make testing easier.
@@ -77,6 +88,15 @@ func (g *Grid) getDivider() string {
 	}
 	ret += "\n"
 	return ret
+}
+
+// GetNumAlive returns the total number of currently Alive Cells in the Grid.
+func (g *Grid) GetNumAlive() int {
+	numAlive := 0
+	for _, row := range g.Cells {
+		numAlive += getNumAlive(row)
+	}
+	return numAlive
 }
 
 // GetGridString returns a friendly representation of the Grid, where a Cell
