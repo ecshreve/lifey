@@ -29,7 +29,7 @@ func NewGrid(size int) *Grid {
 	}
 	g := &Grid{Size: size, Cells: cells}
 	g.populateNeighbors()
-	g.seedGrid(float64(0.75))
+	g.seedGrid(float64(0.4))
 	return g
 }
 
